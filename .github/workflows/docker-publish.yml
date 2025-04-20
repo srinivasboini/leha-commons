@@ -27,5 +27,4 @@ jobs:
       - name: Build and deploy
         run: mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }} 
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }} 
