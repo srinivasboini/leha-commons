@@ -24,7 +24,7 @@ jobs:
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_PASSWORD }}
 
-      - name: Create Maven security settings
+      - name: Create Maven security settings 
         run: |
           mkdir -p ~/.m2
           echo '<settingsSecurity><master>{jSMOWnoPFgsHVpMvz5VrIt/sk5bzBbM0iK1kF8rBw9k=}</master></settingsSecurity>' > ~/.m2/settings-security.xml
