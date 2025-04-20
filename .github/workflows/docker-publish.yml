@@ -20,7 +20,7 @@ jobs:
           java-version: 21
           server-id: ossrh  
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          gpg-passphrase: lethihasrinivasboini
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_PASSWORD }}
 
@@ -37,6 +37,6 @@ jobs:
       - name: Build and deploy
         run: |
           echo "GPG_PASSPHRASE=${{ secrets.GPG_PASSPHRASE }}" > gpg.properties
-          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
+          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=lethihasrinivasboini
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }} 
+          GPG_PASSPHRASE: lethihasrinivasboini
