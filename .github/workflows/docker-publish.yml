@@ -27,8 +27,8 @@ jobs:
             <servers>
               <server>
                 <id>ossrh</id>
-                <username>\${env.OSSRH_USERNAME}</username>
-                <password>\${env.OSSRH_PASSWORD}</password>
+                <username>PP8L/07+</username>
+                <password>p5n6l3QlqjP2IwPEzu7qU4EPQnTfLEhxzwg6VtzAkgxx</password>
               </server>
             </servers>
             <profiles>
@@ -39,12 +39,14 @@ jobs:
                 </activation>
                 <properties>
                   <gpg.executable>gpg</gpg.executable>
-                  <gpg.passphrase>\${env.GPG_PASSPHRASE}</gpg.passphrase>
+                  <gpg.passphrase>lethihasrinivasboini</gpg.passphrase>
                 </properties>
               </profile>
             </profiles>
           </settings>
           EOF
+          # Debug: Show settings.xml (without sensitive info)
+          sed 's/<password>.*<\/password>/<password>***<\/password>/' ~/.m2/settings.xml
 
       - name: Setup GPG
         run: |
@@ -55,8 +57,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Build and deploy
-        run: mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress
-        env:
-          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
-          GPG_PASSPHRASE: lethihasrinivasboini
+        run: |
+          echo "Testing Nexus credentials..."
+          curl -u "PP8L/07+:p5n6l3QlqjP2IwPEzu7qU4EPQnTfLEhxzwg6VtzAkgxx" https://s01.oss.sonatype.org/service/local/staging/profiles
+          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -X
