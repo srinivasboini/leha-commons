@@ -29,7 +29,14 @@ jobs:
           mkdir -p ~/.m2
           echo '<settingsSecurity><master>{jSMOWnoPFgsHVpMvz5VrIt/sk5bzBbM0iK1kF8rBw9k=}</master></settingsSecurity>' > ~/.m2/settings-security.xml
 
+      - name: Setup GPG
+        run: |
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
+
       - name: Build and deploy
-        run: mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress
+        run: |
+          echo "GPG_PASSPHRASE=${{ secrets.GPG_PASSPHRASE }}" > gpg.properties
+          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}
         env:
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }} 
