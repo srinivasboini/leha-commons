@@ -18,9 +18,7 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          server-id: ossrh  
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase: lethihasrinivasboini
+          server-id: ossrh
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_PASSWORD }}
 
@@ -43,3 +41,5 @@ jobs:
           mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=lethihasrinivasboini -Dgpg.useagent=false
         env:
           GPG_PASSPHRASE: lethihasrinivasboini
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
