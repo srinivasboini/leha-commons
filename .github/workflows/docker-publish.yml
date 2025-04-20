@@ -39,7 +39,8 @@ jobs:
                 </activation>
                 <properties>
                   <gpg.executable>gpg</gpg.executable>
-                  <gpg.passphrase>lethihasrinivasboini</gpg.passphrase>
+                  <gpg.passphrase>lethihasrinivasboini7</gpg.passphrase>
+                  <gpg.useagent>false</gpg.useagent>
                 </properties>
               </profile>
             </profiles>
@@ -54,7 +55,12 @@ jobs:
           echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
           echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+          # List keys to verify import
           gpg --list-secret-keys --keyid-format LONG
+          # Test signing
+          echo "test" > test.txt
+          gpg --batch --yes --passphrase "lethihasrinivasboini7" --pinentry-mode loopback --sign test.txt
+          gpg --verify test.txt.gpg
 
       - name: Build and deploy
         run: |
