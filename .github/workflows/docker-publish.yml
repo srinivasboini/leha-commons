@@ -18,14 +18,33 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
-          server-id: ossrh
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_PASSWORD }}
 
-      - name: Create Maven security settings
+      - name: Create Maven settings
         run: |
           mkdir -p ~/.m2
-          echo '<settingsSecurity><master>{jSMOWnoPFgsHVpMvz5VrIt/sk5bzBbM0iK1kF8rBw9k=}</master></settingsSecurity>' > ~/.m2/settings-security.xml
+          cat > ~/.m2/settings.xml << EOF
+          <settings>
+            <servers>
+              <server>
+                <id>ossrh</id>
+                <username>\${env.OSSRH_USERNAME}</username>
+                <password>\${env.OSSRH_PASSWORD}</password>
+              </server>
+            </servers>
+            <profiles>
+              <profile>
+                <id>ossrh</id>
+                <activation>
+                  <activeByDefault>true</activeByDefault>
+                </activation>
+                <properties>
+                  <gpg.executable>gpg</gpg.executable>
+                  <gpg.passphrase>\${env.GPG_PASSPHRASE}</gpg.passphrase>
+                </properties>
+              </profile>
+            </profiles>
+          </settings>
+          EOF
 
       - name: Setup GPG
         run: |
@@ -36,10 +55,8 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Build and deploy
-        run: |
-          echo "GPG_PASSPHRASE=lethihasrinivasboini" > gpg.properties
-          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=lethihasrinivasboini -Dgpg.useagent=false
+        run: mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress
         env:
+          OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          OSSRH_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
           GPG_PASSPHRASE: lethihasrinivasboini
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
