@@ -26,9 +26,9 @@ jobs:
           <settings>
             <servers>
               <server>
-                <id>ossrh</id>
-                <username>PP8L/07+</username>
-                <password>p5n6l3QlqjP2IwPEzu7qU4EPQnTfLEhxzwg6VtzAkgxx</password>
+                <id>central</id>
+                <username>${{ secrets.OSSRH_USERNAME }}</username>
+                <password>${{ secrets.OSSRH_PASSWORD }}</password>
               </server>
             </servers>
             <profiles>
@@ -58,6 +58,10 @@ jobs:
 
       - name: Build and deploy
         run: |
-          echo "Testing Nexus credentials..."
-          curl -u "PP8L/07+:p5n6l3QlqjP2IwPEzu7qU4EPQnTfLEhxzwg6VtzAkgxx" https://s01.oss.sonatype.org/service/local/staging/profiles
+          echo "Testing Central credentials..."
+          # Test credentials with curl
+          curl -v -u "${{ secrets.OSSRH_USERNAME }}:${{ secrets.OSSRH_PASSWORD }}" https://central.sonatype.com/api/v1/publishing/verify
+          # Test credentials with Maven
+          mvn help:effective-settings
+          # Deploy with debug
           mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -X
