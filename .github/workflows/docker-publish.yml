@@ -31,12 +31,15 @@ jobs:
 
       - name: Setup GPG
         run: |
+          mkdir -p ~/.gnupg
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
           echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
           gpg --list-secret-keys --keyid-format LONG
 
       - name: Build and deploy
         run: |
-          echo "GPG_PASSPHRASE=${{ secrets.GPG_PASSPHRASE }}" > gpg.properties
-          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=lethihasrinivasboini
+          echo "GPG_PASSPHRASE=lethihasrinivasboini" > gpg.properties
+          mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress -Dgpg.passphrase=lethihasrinivasboini -Dgpg.useagent=false
         env:
           GPG_PASSPHRASE: lethihasrinivasboini
