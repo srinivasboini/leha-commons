@@ -39,7 +39,7 @@ jobs:
                 </activation>
                 <properties>
                   <gpg.executable>gpg</gpg.executable>
-                  <gpg.passphrase>lethihasrinivasboini7</gpg.passphrase>
+                  <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
                   <gpg.useagent>false</gpg.useagent>
                 </properties>
               </profile>
@@ -59,7 +59,7 @@ jobs:
           gpg --list-secret-keys --keyid-format LONG
           # Test signing
           echo "test" > test.txt
-          gpg --batch --yes --passphrase "lethihasrinivasboini7" --pinentry-mode loopback --sign test.txt
+          gpg --batch --yes --passphrase "${{ secrets.GPG_PASSPHRASE }}" --pinentry-mode loopback --sign test.txt
           gpg --verify test.txt.gpg
 
       - name: Build and deploy
