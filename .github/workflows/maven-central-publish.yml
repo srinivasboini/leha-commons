@@ -34,12 +34,12 @@ jobs:
           </settings>
           EOF
 
-      # - name: Setup GPG
-      #   run: |
-      #     mkdir -p ~/.gnupg
-      #     echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
-      #     echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
-      #     echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+      - name: Setup GPG
+        run: |
+          mkdir -p ~/.gnupg
+          echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+          echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
 
       - name: Build and deploy
         run: mvn clean deploy -Psign-artifacts --batch-mode --no-transfer-progress 
